@@ -38,3 +38,28 @@ change `account_id` in `Fargate_git\Kubernetes\serviceAccount-eks.yaml`
  annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::account_id:role/AmazonEKSLoadBalancerControllerRole
 ```
+
+
+## Create EKS cluster with fargate instance and EFS instance
+Change the `default` in `Fargate_EFS/variables.tf` 
+
+```
+variable "user_account" {
+ type        = string
+ description = "user account arn"
+ default     = "your user account arn" //"arn:aws:iam::XXXXXXXXXX:root"
+}
+
+variable "account_id" {
+ type        = string
+ description = "user account arn"
+ default     = "your user id arn" //"arn:aws:iam::XXXXXXXXXX"
+}
+```
+
+change `account_id` in `Fargate_EFS\Kubernetes\serviceAccount-eks.yaml`
+
+``` 
+ annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::account_id:role/AmazonEKSLoadBalancerControllerRole
+```
