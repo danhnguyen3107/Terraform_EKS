@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blogapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blogapp
+  template:
+    metadata:
+      labels:
+        app: blogapp
+    spec:
+      containers:
+      - name: blogapp
+        image: dinhdanhnguyen/blogapp-python:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: blogapp-config
+              key: HOST
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: blogapp-config
+              key: PORT
+        - name: DBNAME
+          valueFrom:
+            configMapKeyRef:
+              name: blogapp-config
+              key: DBNAME
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: blogapp-secrets
+              key: USER
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: blogapp-secrets
+              key: PASSWORD
+              
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: web
+                    operator: In
+                    values:
+                      - python-django  # Replace with your first worker node hostname
